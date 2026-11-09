@@ -108,7 +108,8 @@ def render(md_path: Path, output_path: Path, title: str) -> None:
     .cover-note { padding: 12px 14px; border: 1px solid #d5e5da; border-radius: 6px; background: #f2f8f3; }
     footer { margin-top: 22px; padding-top: 8px; border-top: 1px solid #dce6df; text-align: center; color: #91a097; font-size: 8pt; break-inside: avoid; page-break-inside: avoid; }
     """
-    document = f"""<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><title>{html.escape(title)}</title><style>{css}</style></head><body><div class='cover-note'><strong>校园事务智能办事助手（福晓通）</strong><br>奶娃工程 · 概要设计材料 · V1.0 · 2026-11-06<br>正式墨刀链接与成员具体分工仍待团队确认。</div>{rendered}<footer>{html.escape(title)} · 奶娃工程 · 2026-11-06</footer></body></html>"""
+    modao_url = "https://modao.cc/proto/RXDXHlcLto8ebhZYV3MNe8/sharing?view_mode=read_only&screen=rbpVaTLNX8pb7I5Z5"
+    document = f"""<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><title>{html.escape(title)}</title><style>{css}</style></head><body><div class='cover-note'><strong>校园事务智能办事助手（福晓通）</strong><br>奶娃工程 · 概要设计材料 · V1.0 · 2026-11-06<br>正式墨刀只读预览：<a href='{html.escape(modao_url)}'>{html.escape(modao_url)}</a><br>成员具体分工仍待团队确认。</div>{rendered}<footer>{html.escape(title)} · 奶娃工程 · 2026-11-06</footer></body></html>"""
     output_path.write_text(document, encoding="utf-8")
 
 

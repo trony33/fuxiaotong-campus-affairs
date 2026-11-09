@@ -1,5 +1,18 @@
 {
+  "generatedAt": "2026-11-09T19:54:26+08:00",
+  "environment": "isolated Chrome browser context; synthetic local data; context disposed after test",
   "tests": [
+    {
+      "id": "BRAND-01",
+      "description": "页面标题、品牌和知识库名称统一为福晓通",
+      "status": "PASS",
+      "detail": {
+        "title": "福晓通 · 校园事务办事助手原型",
+        "brand": "福晓通",
+        "subtitle": "校园事务办事助手",
+        "eyebrow": "✳ 福州大学 · 福晓通知识库"
+      }
+    },
     {
       "id": "NAV-01",
       "description": "导航到办事指南并渲染政策卡片",
@@ -29,10 +42,11 @@
     },
     {
       "id": "CHAT-01",
-      "description": "新对话、发送请假问题并产生来源回答",
+      "description": "新对话、发送请假问题并产生可追溯回答",
       "status": "PASS",
       "detail": {
         "history": 1,
+        "heading": "福晓通办事助手",
         "hasSource": true,
         "hasChecklistAction": true
       }
@@ -44,7 +58,8 @@
       "detail": {
         "open": true,
         "closed": true,
-        "title": "政策来源与核验信息"
+        "title": "政策来源与核验信息",
+        "url": "https://jwch.fzu.edu.cn/info/1201/14309.htm"
       }
     },
     {
@@ -90,13 +105,14 @@
     },
     {
       "id": "PERSIST-01",
-      "description": "刷新后历史、收藏、画像状态保持",
+      "description": "刷新后历史、收藏、清单和画像状态保持",
       "status": "PASS",
       "detail": {
         "history": 1,
         "favorites": [
           "leave"
         ],
+        "checklist": 5,
         "grade": "大四"
       }
     },
@@ -110,6 +126,11 @@
       }
     }
   ],
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0
+  },
   "consoleEvents": [],
   "exceptionEvents": [],
   "logEvents": []

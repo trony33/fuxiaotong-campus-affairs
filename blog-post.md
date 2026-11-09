@@ -1,6 +1,6 @@
 # 2026秋软工实践 奶娃工程——项目原型设计+概要设计
 
-> **发布说明：**本文为奶娃工程团队博客园发布稿草案。正式发布前仅需补充墨刀公开预览链接，并在匿名窗口验证可访问。本文只需要由团队博客发布一次。
+> **发布说明：**本文为奶娃工程团队博客园发布稿。墨刀公开预览链接已补入，并已在匿名窗口核验可访问；发布时仍需由团队账号完成博客园登录和发布。本文只需要由团队博客发布一次。
 
 ## 作业信息
 
@@ -27,7 +27,7 @@
 ### 2.1 原型工具与交付链接
 
 - **正式原型工具：**墨刀。
-- **正式在线展示链接：**待发布（墨刀项目创建并公开后填写；发布前请在匿名窗口验证可访问）。
+- **正式在线展示链接：**[墨刀只读预览](https://modao.cc/proto/RXDXHlcLto8ebhZYV3MNe8/sharing?view_mode=read_only&screen=rbpVaTLNX8pb7I5Z5)（访问权限：所有人；已用匿名窗口核验）。
 - **本次架构负责人提供的离线补充原型：**`prototype/index.html`，用于补充演示 Agent 问答状态、证据来源、风险提示、材料清单、提醒确认、个人画像和管理端核验状态。它使用预设政策样例与浏览器 `localStorage`，不连接后端、实时政策检索、大模型、学校审批系统或真实通知服务；正式提交仍以团队发布的 Axure/墨刀原型为准。
 
 原型不是单纯的聊天页面，而是把 Agent 输出拆成可执行组件：结论卡、适用条件、步骤列表、材料清单、官方来源、风险提示和下一步按钮。概要设计目标是让用户从回答进入清单、负责部门或提醒流程，并在有副作用的操作前确认；离线补充页只对其中可在浏览器本地演示的路径提供交互，反馈、部门联系和管理发布入口以演示提示为主。
@@ -158,12 +158,12 @@ Agent 不直接连接数据库。后端工具负责权限、字段投影、状�
 
 ## 六、提交材料链接
 
-> GitHub 与 PDF 链接发布后需在匿名窗口复核；墨刀链接仍待项目公开后补入。
+> GitHub、PDF 和墨刀链接均已补入材料；墨刀链接已在匿名窗口复核。博客园正式发布仍需团队账号完成登录操作。
 
 - GitHub 团队仓库：[https://github.com/trony33/fuxiaotong-campus-affairs](https://github.com/trony33/fuxiaotong-campus-affairs)
 - [`奶娃工程_系统设计说明书.pdf`](https://github.com/trony33/fuxiaotong-campus-affairs/blob/main/docs/%E5%A5%B6%E5%A8%83%E5%B7%A5%E7%A8%8B_%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E%E4%B9%A6.pdf)
 - [`奶娃工程_数据库设计说明书.pdf`](https://github.com/trony33/fuxiaotong-campus-affairs/blob/main/docs/%E5%A5%B6%E5%A8%83%E5%B7%A5%E7%A8%8B_%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E%E4%B9%A6.pdf)
-- 原型设计展示链接：待发布（墨刀项目创建并公开后填写）
+- 原型设计展示链接：[墨刀只读预览](https://modao.cc/proto/RXDXHlcLto8ebhZYV3MNe8/sharing?view_mode=read_only&screen=rbpVaTLNX8pb7I5Z5)
 - 架构负责人基线文档：[04_Agent与系统架构最终稿（V1.0）](https://mi.feishu.cn/docx/WA5ud2GyGoyYBpxdcT4clwcLnwf)
 
 ## 七、总结

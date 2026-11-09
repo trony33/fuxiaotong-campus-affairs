@@ -159,7 +159,7 @@ function askQuestion(question) {
   saveState();
   const response = document.createElement('div');
   response.className = 'chat-message assistant';
-  response.innerHTML = `<span class="agent-avatar" aria-hidden="true">✳</span><div class="answer-card"><div class="answer-heading"><strong>办事助手</strong><span class="risk-badge ${answer.warning ? 'warn' : ''}">${answer.badge}</span></div><div class="answer-text">${answer.html}</div>${renderSource(answer.source)}<div class="answer-actions">${answer.actions.map((label) => `<button class="action-button">${escapeHtml(label)}</button>`).join('')}</div><div class="answer-disclaimer">演示回答 · 政策结论以核验后的官方文件为准</div></div>`;
+   response.innerHTML = `<span class="agent-avatar" aria-hidden="true">✳</span><div class="answer-card"><div class="answer-heading"><strong>福晓通办事助手</strong><span class="risk-badge ${answer.warning ? 'warn' : ''}">${answer.badge}</span></div><div class="answer-text">${answer.html}</div>${renderSource(answer.source)}<div class="answer-actions">${answer.actions.map((label) => `<button class="action-button">${escapeHtml(label)}</button>`).join('')}</div><div class="answer-disclaimer">演示回答 · 政策结论以核验后的官方文件为准</div></div>`;
   document.getElementById('chat-stream').append(response);
   response.querySelectorAll('.action-button').forEach((button) => button.addEventListener('click', () => doAction(button.textContent)));
   response.querySelector('.source-detail-button')?.addEventListener('click', () => openSourceModal(answer.source));

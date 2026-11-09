@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03T11:32:40.814Z",
+  "generatedAt": "2026-11-09T19:54:26+08:00",
   "widths": [
     320,
     390,
@@ -29,12 +29,12 @@
       },
       "composer": {
         "x": 15,
-        "y": 661,
+        "y": 817,
         "width": 275,
         "height": 95,
-        "top": 661,
+        "top": 817,
         "right": 290,
-        "bottom": 756,
+        "bottom": 912,
         "left": 15
       },
       "overflow": []
@@ -59,12 +59,12 @@
       },
       "composer": {
         "x": 15,
-        "y": 674.5,
+        "y": 830.5,
         "width": 345,
         "height": 95,
-        "top": 674.5,
+        "top": 830.5,
         "right": 360,
-        "bottom": 769.5,
+        "bottom": 925.5,
         "left": 15
       },
       "overflow": []
@@ -89,12 +89,12 @@
       },
       "composer": {
         "x": 15,
-        "y": 674.5,
+        "y": 830.5,
         "width": 715,
         "height": 95,
-        "top": 674.5,
+        "top": 830.5,
         "right": 730,
-        "bottom": 769.5,
+        "bottom": 925.5,
         "left": 15
       },
       "overflow": []
@@ -104,7 +104,7 @@
       "innerWidth": 768,
       "clientWidth": 768,
       "scrollWidth": 768,
-      "navWidth": 179,
+      "navWidth": 200,
       "contextRailDisplay": "none",
       "assistantLayoutDisplay": "block",
       "heading": {
@@ -119,12 +119,12 @@
       },
       "composer": {
         "x": 224,
-        "y": 694.5,
+        "y": 850.5,
         "width": 520,
         "height": 95,
-        "top": 694.5,
+        "top": 850.5,
         "right": 744,
-        "bottom": 789.5,
+        "bottom": 945.5,
         "left": 224
       },
       "overflow": []
@@ -134,7 +134,7 @@
       "innerWidth": 1024,
       "clientWidth": 1024,
       "scrollWidth": 1024,
-      "navWidth": 207,
+      "navWidth": 236,
       "contextRailDisplay": "block",
       "assistantLayoutDisplay": "grid",
       "heading": {
@@ -149,12 +149,12 @@
       },
       "composer": {
         "x": 260,
-        "y": 694.5,
+        "y": 850.5,
         "width": 476,
         "height": 95,
-        "top": 694.5,
+        "top": 850.5,
         "right": 736,
-        "bottom": 789.5,
+        "bottom": 945.5,
         "left": 260
       },
       "overflow": []
@@ -164,7 +164,7 @@
       "innerWidth": 1440,
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "navWidth": 207,
+      "navWidth": 236,
       "contextRailDisplay": "block",
       "assistantLayoutDisplay": "grid",
       "heading": {

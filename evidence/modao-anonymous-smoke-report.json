@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-11-09T20:22:07+08:00",
+  "url": "https://modao.cc/proto/RXDXHlcLto8ebhZYV3MNe8/sharing?view_mode=read_only&screen=rbpVaTLNX8pb7I5Z5",
+  "environment": "isolated anonymous Chrome browser context",
+  "checks": [
+    {
+      "id": "ACCESS-01",
+      "description": "匿名访问公开链接且未跳转登录",
+      "status": "PASS"
+    },
+    {
+      "id": "BRAND-01",
+      "description": "在线原型显示福晓通品牌",
+      "status": "PASS"
+    },
+    {
+      "id": "POLICY-01",
+      "description": "办事指南及奖学金筛选可用",
+      "status": "PASS"
+    },
+    {
+      "id": "CHAT-01",
+      "description": "请假问答返回来源与材料清单入口",
+      "status": "PASS"
+    }
+  ],
+  "detail": {
+    "title": "福晓通 · 校园事务办事助手原型",
+    "brand": "福晓通",
+    "subtitle": "校园事务办事助手",
+    "policyCards": 4,
+    "scholarshipCards": 2,
+    "answerTitle": "福晓通办事助手",
+    "hasSource": true,
+    "hasChecklist": true
+  },
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0
+  }
+}
