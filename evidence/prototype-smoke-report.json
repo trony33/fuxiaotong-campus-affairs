@@ -1,0 +1,116 @@
+{
+  "tests": [
+    {
+      "id": "NAV-01",
+      "description": "导航到办事指南并渲染政策卡片",
+      "status": "PASS",
+      "detail": {
+        "view": "view-policies",
+        "cards": 4
+      }
+    },
+    {
+      "id": "POL-01",
+      "description": "政策筛选与搜索",
+      "status": "PASS",
+      "detail": {
+        "filtered": 2,
+        "searched": 1
+      }
+    },
+    {
+      "id": "POL-02",
+      "description": "收藏政策并在历史收藏中显示",
+      "status": "PASS",
+      "detail": {
+        "label": "★ 已收藏",
+        "rows": 1
+      }
+    },
+    {
+      "id": "CHAT-01",
+      "description": "新对话、发送请假问题并产生来源回答",
+      "status": "PASS",
+      "detail": {
+        "history": 1,
+        "hasSource": true,
+        "hasChecklistAction": true
+      }
+    },
+    {
+      "id": "SRC-01",
+      "description": "打开并关闭来源详情弹窗",
+      "status": "PASS",
+      "detail": {
+        "open": true,
+        "closed": true,
+        "title": "政策来源与核验信息"
+      }
+    },
+    {
+      "id": "CHECK-01",
+      "description": "从回答生成材料清单并勾选后持久化",
+      "status": "PASS",
+      "detail": {
+        "view": "view-checklist",
+        "count": 5,
+        "done": 1
+      }
+    },
+    {
+      "id": "REM-01",
+      "description": "提醒确认添加与取消",
+      "status": "PASS",
+      "detail": {
+        "open": true,
+        "cancelClosed": true,
+        "afterCancel": 0,
+        "added": 1,
+        "remaining": 0
+      }
+    },
+    {
+      "id": "PROFILE-01",
+      "description": "画像保存后用于页面展示并持久化",
+      "status": "PASS",
+      "detail": {
+        "grade": "大四",
+        "fact": "大四",
+        "saved": "大四"
+      }
+    },
+    {
+      "id": "ADMIN-01",
+      "description": "管理端政策记录与核验操作可见",
+      "status": "PASS",
+      "detail": {
+        "rows": 4,
+        "toast": "核验清单：确认官方链接、适用对象、发布日期和关键条款"
+      }
+    },
+    {
+      "id": "PERSIST-01",
+      "description": "刷新后历史、收藏、画像状态保持",
+      "status": "PASS",
+      "detail": {
+        "history": 1,
+        "favorites": [
+          "leave"
+        ],
+        "grade": "大四"
+      }
+    },
+    {
+      "id": "BOUNDARY-01",
+      "description": "空问题不创建问答记录",
+      "status": "PASS",
+      "detail": {
+        "before": 1,
+        "after": 1
+      }
+    }
+  ],
+  "consoleEvents": [],
+  "exceptionEvents": [],
+  "logEvents": []
+}

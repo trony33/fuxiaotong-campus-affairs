@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#126b52">
+  <title>校园事务 · 办事助手原型</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <a class="brand" href="#assistant" aria-label="校园事务办事助手首页">
+        <span class="brand-mark" aria-hidden="true">校</span>
+        <span><strong>校园事务</strong><small>办事助手</small></span>
+      </a>
+      <div class="nav-label">工作区</div>
+      <nav class="main-nav">
+        <button class="nav-item is-active" data-view="assistant"><span class="nav-icon">✳</span><span>智能问答</span><kbd>1</kbd></button>
+        <button class="nav-item" data-view="policies"><span class="nav-icon">▤</span><span>办事指南</span></button>
+        <button class="nav-item" data-view="checklist"><span class="nav-icon">☑</span><span>材料清单</span><span class="nav-count" id="checklist-count">0</span></button>
+        <button class="nav-item" data-view="reminders"><span class="nav-icon">◷</span><span>提醒中心</span></button>
+        <button class="nav-item" data-view="history"><span class="nav-icon">↺</span><span>历史与收藏</span></button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note">
+        <span class="live-dot"></span>
+        <div><strong>知识服务在线</strong><small>回答附官方来源</small></div>
+      </div>
+      <button class="profile-chip" data-view="profile">
+        <span class="avatar">林</span><span><strong>林同学</strong><small>本科 · 大三</small></span><span class="chevron">⌄</span>
+      </button>
+      <button class="admin-link" data-view="admin">管理端 <span>↗</span></button>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb"><span>工作区</span><span class="slash">/</span><strong id="page-title">智能问答</strong></div>
+        <div class="top-actions">
+          <span class="prototype-label"><span class="live-dot"></span> 原型演示</span>
+          <button class="icon-button" id="help-button" aria-label="查看服务状态" title="服务状态">ⓘ</button>
+          <button class="avatar small-avatar" data-view="profile" aria-label="个人资料">林</button>
+        </div>
+      </header>
+
+      <section class="view assistant-view is-visible" id="view-assistant">
+        <div class="assistant-layout">
+          <section class="conversation-column">
+            <div class="conversation-heading">
+              <div>
+                <div class="eyebrow"><span class="spark">✳</span> 福州大学 · 校园事务知识库</div>
+                <h1>你好，林同学</h1>
+                <p>我可以帮你查政策、理流程、备材料。回答会附上可核验的官方出处。</p>
+              </div>
+              <button class="quiet-button" id="new-chat">＋ 新对话</button>
+            </div>
+            <div class="suggestion-row" aria-label="常见问题">
+              <button class="suggestion" data-question="本科生病假5天，需要什么材料，谁审批？"><span class="suggestion-icon green">↗</span><span>病假怎么申请</span><span class="arrow">→</span></button>
+              <button class="suggestion" data-question="国家奖学金和国家励志奖学金能同时拿吗？国家助学金呢？"><span class="suggestion-icon amber">◇</span><span>奖助学金兼得规则</span><span class="arrow">→</span></button>
+              <button class="suggestion" data-question="今年优秀学生综合奖学金什么时候截止？"><span class="suggestion-icon blue">◷</span><span>查询申请截止时间</span><span class="arrow">→</span></button>
+            </div>
+            <div class="chat-stream" id="chat-stream" aria-live="polite">
+              <div class="welcome-line"><span class="agent-avatar">✳</span><span>选择一个常见问题，或输入你正在办理的校园事务。</span></div>
+            </div>
+            <form class="composer" id="question-form">
+              <label class="sr-only" for="question-input">输入校园事务问题</label>
+              <textarea id="question-input" rows="1" placeholder="例如：研究生请假需要走什么流程？" maxlength="500"></textarea>
+              <div class="composer-footer">
+                <span class="privacy-note"><span>⌑</span> 仅使用必要的个人信息筛选政策</span>
+                <div class="composer-actions"><span class="char-count" id="char-count">0/500</span><button class="send-button" type="submit" aria-label="发送问题" title="发送问题">↑</button></div>
+              </div>
+            </form>
+            <p class="demo-disclaimer">原型演示使用预设知识样例；正式系统以核验后的政策记录为准，不替代学校审批。</p>
+          </section>
+          <aside class="context-rail">
+            <div class="rail-section">
+              <div class="rail-heading"><h2>我的办事画像</h2><button class="text-button" data-view="profile">编辑</button></div>
+              <div class="profile-card">
+                <div class="profile-card-top"><span class="avatar profile-avatar">林</span><div><strong>林同学</strong><small>画像仅用于筛选适用政策</small></div><span class="verified" title="由本人提供">✓</span></div>
+                <dl class="profile-facts"><div><dt>学历阶段</dt><dd id="fact-level">本科</dd></div><div><dt>年级</dt><dd id="fact-grade">大三</dd></div><div><dt>校区</dt><dd id="fact-campus">旗山校区</dd></div></dl>
+              </div>
+            </div>
+            <div class="rail-section">
+              <div class="rail-heading"><h2>高频事务</h2><button class="text-button" data-view="policies">全部</button></div>
+              <button class="matter-row" data-question="本科生病假5天，需要什么材料，谁审批？"><span class="matter-icon green">✚</span><span><strong>请假 / 销假</strong><small>流程 · 材料 · 审批</small></span><span class="matter-chevron">›</span></button>
+              <button class="matter-row" data-question="国家奖学金和国家励志奖学金能同时拿吗？国家助学金呢？"><span class="matter-icon violet">◇</span><span><strong>奖助学金</strong><small>申请条件 · 兼得规则</small></span><span class="matter-chevron">›</span></button>
+              <button class="matter-row" data-view="policies"><span class="matter-icon blue">▦</span><span><strong>考试与选课</strong><small>报名 · 退选 · 时间提醒</small></span><span class="matter-chevron">›</span></button>
+            </div>
+            <div class="trust-note"><span class="trust-icon">✓</span><p><strong>来源可追溯</strong><br>每条政策结论均关联官方文件或通知。</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view content-view" id="view-policies">
+        <div class="page-intro"><div><div class="eyebrow">POLICY DIRECTORY</div><h1>办事指南</h1><p>按事务查看已收录的政策和办事流程。</p></div><label class="search-field"><span>⌕</span><input id="policy-search" placeholder="搜索事务或关键词"></label></div>
+        <div class="filter-tabs"><button class="filter-tab is-selected" data-policy-filter="all">全部事务</button><button class="filter-tab" data-policy-filter="LEAVE">请假与证明</button><button class="filter-tab" data-policy-filter="SCHOLARSHIP">奖助学金</button><button class="filter-tab" data-policy-filter="ACADEMIC">考试与选课</button></div>
+        <div class="policy-grid" id="policy-grid"></div>
+        <div class="coverage-note"><span>ⓘ</span><p>列表只展示当前知识库中已整理的示例事项。未收录事务请通过官方部门渠道核实。</p></div>
+      </section>
+
+      <section class="view content-view" id="view-checklist">
+        <div class="page-intro"><div><div class="eyebrow">YOUR TASKS</div><h1>材料清单</h1><p>把办事材料拆成可检查的步骤，进度保存在当前浏览器。</p></div><button class="outline-button" id="clear-checklist">清空已完成</button></div>
+        <div class="checklist-wrap" id="checklist-wrap"></div>
+      </section>
+
+      <section class="view content-view" id="view-reminders">
+        <div class="page-intro"><div><div class="eyebrow">DEADLINE TRACKER</div><h1>提醒中心</h1><p>你确认创建的事项会显示在这里。原型仅演示站内提醒。</p></div><button class="primary-button" id="create-reminder">＋ 添加提醒</button></div>
+        <div class="reminder-callout"><span class="callout-icon">◷</span><div><strong>提醒时间以官方通知为准</strong><p>若知识库尚未收录明确日期，助手不会推测截止时间。请先核对通知原文。</p></div></div>
+        <div class="reminder-list" id="reminder-list"></div>
+      </section>
+
+      <section class="view content-view" id="view-history">
+        <div class="page-intro"><div><div class="eyebrow">RECENT ACTIVITY</div><h1>历史与收藏</h1><p>查看最近的问题和已保存的政策。</p></div></div>
+        <div class="history-tabs"><button class="history-tab is-selected" data-history-tab="recent">最近问答</button><button class="history-tab" data-history-tab="favorites">收藏政策</button></div>
+        <div class="history-list" id="history-list"></div>
+      </section>
+
+      <section class="view content-view" id="view-profile">
+        <div class="page-intro"><div><div class="eyebrow">PERSONALIZATION</div><h1>办事画像</h1><p>画像只用于匹配政策适用范围，可随时修改或清除。</p></div></div>
+        <form class="profile-form" id="profile-form">
+          <div class="form-heading"><span class="avatar profile-avatar">林</span><div><strong>个人信息</strong><small>资料由你提供，默认不发送与回答无关的信息</small></div></div>
+          <label>学历阶段<select name="level"><option>本科</option><option>专科</option><option>硕士研究生</option><option>博士研究生</option></select></label>
+          <label>年级<select name="grade"><option>大一</option><option>大二</option><option>大三</option><option>大四</option><option>研一</option><option>研二</option><option>研三</option></select></label>
+          <label>专业<input name="major" value="计算机科学与技术"></label>
+          <label>校区<select name="campus"><option>旗山校区</option><option>怡山校区</option><option>铜盘校区</option><option>其他/不确定</option></select></label>
+          <div class="form-footer"><button class="quiet-button" type="button" id="clear-profile">清除画像</button><button class="primary-button" type="submit">保存画像</button></div>
+        </form>
+        <div class="privacy-panel"><strong>数据使用说明</strong><p>正式系统仅在用户授权的范围内使用画像进行适用对象匹配。问题记录和画像分开管理，用户可以分别删除。当前原型将内容保存在浏览器本地。</p></div>
+      </section>
+
+      <section class="view content-view admin-view" id="view-admin">
+        <div class="admin-banner"><div><div class="eyebrow">KNOWLEDGE OPERATIONS</div><h1>政策知识管理</h1><p>采集、核验、发布，每一条回答都从可追溯的政策记录开始。</p></div><span class="admin-role">核验员视图</span></div>
+        <div class="admin-stats"><div><small>政策记录</small><strong>3</strong><span>当前示例知识</span></div><div><small>待核验</small><strong class="stat-amber">1</strong><span>需要二次检查</span></div><div><small>已发布</small><strong class="stat-green">2</strong><span>可用于回答</span></div><div><small>待处理反馈</small><strong>0</strong><span>所有问题已归档</span></div></div>
+        <div class="admin-toolbar"><div><h2>政策记录</h2><p>发布状态与有效期共同决定 Agent 能否引用。</p></div><button class="primary-button" id="new-policy">＋ 新建草稿</button></div>
+        <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>政策 / 事务</th><th>来源部门</th><th>状态</th><th>最后核验</th><th></th></tr></thead><tbody id="admin-policy-rows"></tbody></table></div>
+        <div class="admin-rule"><span>ⓘ</span><p><strong>发布规则：</strong>录入员与核验人分离。仅“已发布”且未过期版本可作为确定性回答证据；更新政策时新增版本，不覆盖历史引用。</p></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="modal" id="reminder-modal">
+    <form method="dialog" class="modal-form" id="reminder-form">
+      <div class="modal-header"><div><div class="eyebrow">NEW REMINDER</div><h2>添加办事提醒</h2></div><button class="icon-button" value="cancel" aria-label="关闭">×</button></div>
+      <label>提醒事项<input name="title" required value="核对校园事务截止时间" maxlength="80"></label>
+      <label>提醒日期<input name="date" type="date" required></label>
+      <label>提醒时间<select name="time"><option value="09:00">上午 9:00</option><option value="12:00">中午 12:00</option><option value="18:00">下午 6:00</option></select></label>
+      <div class="modal-warning"><span>!</span><span>创建提醒仅保存你的个人计划，不代表学校通知或官方截止日期。</span></div>
+      <div class="modal-footer"><button class="quiet-button" value="cancel">取消</button><button class="primary-button" value="default" type="submit">确认添加</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="source-modal">
+    <div class="modal-form">
+      <div class="modal-header"><div><div class="eyebrow">SOURCE DETAILS</div><h2 id="source-title">来源详情</h2></div><button class="icon-button" id="close-source" aria-label="关闭">×</button></div>
+      <div id="source-content"></div>
+      <div class="modal-footer"><button class="quiet-button" id="source-close-button">关闭</button><a class="primary-button button-link" id="source-link" href="https://jwch.fzu.edu.cn/info/1201/14309.htm" target="_blank" rel="noreferrer">打开官方来源 ↗</a></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

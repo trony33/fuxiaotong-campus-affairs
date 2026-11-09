@@ -1,0 +1,852 @@
+<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><title>数据库设计说明书</title><style>
+    @page { size: A4; margin: 18mm 16mm 19mm; }
+    :root { color: #18352c; font-family: 'Microsoft YaHei','Noto Sans SC',Arial,sans-serif; }
+    body { margin: 0; font-size: 10.2pt; line-height: 1.65; color: #24382f; }
+    h1 { break-before: page; page-break-before: always; font-size: 24pt; color: #0b5742; border-bottom: 2px solid #b8d6c3; padding-bottom: 9px; }
+    body > h1:first-of-type { break-before: auto; page-break-before: auto; }
+    h2 { margin-top: 23px; padding: 7px 10px; border-left: 4px solid #2b8061; background: #edf6f0; color: #174d39; font-size: 16pt; page-break-after: avoid; }
+    h3 { margin-top: 17px; color: #2d6950; font-size: 12.5pt; page-break-after: avoid; }
+    h4 { color: #506b5d; page-break-after: avoid; }
+    p { margin: 7px 0; }
+    blockquote { margin: 12px 0; padding: 8px 13px; border-left: 4px solid #d6a45a; background: #fff8eb; color: #6b5a3e; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 8.6pt; line-height: 1.45; break-inside: avoid; page-break-inside: avoid; }
+    thead { display: table-header-group; }
+    th { background: #e4f1e9; color: #21533d; font-weight: 700; }
+    th, td { border: 1px solid #cbdad0; padding: 4px 6px; vertical-align: top; }
+    tr { page-break-inside: avoid; }
+    code { padding: 1px 3px; border-radius: 3px; background: #f1f4f2; color: #7c4c1e; font-family: Consolas,monospace; font-size: .9em; }
+    pre { padding: 10px; overflow-wrap: anywhere; white-space: pre-wrap; background: #f4f7f5; border: 1px solid #d9e3dc; border-radius: 5px; font-size: 8pt; line-height: 1.45; page-break-inside: avoid; }
+    img { display: block; width: 100%; max-height: 210mm; object-fit: contain; margin: 12px auto; page-break-inside: avoid; }
+    .design-diagram { margin: 12px 0; break-inside: avoid; page-break-inside: avoid; }
+    .design-diagram img { margin: 0 auto; }
+    @media print {
+      .design-diagram-lifecycle img { width: auto; max-width: 100%; height: 150mm; }
+    }
+    a { color: #126b52; overflow-wrap: anywhere; }
+    li { margin: 3px 0; }
+    hr { border: 0; border-top: 1px solid #dce6df; margin: 18px 0; }
+    .cover-note { padding: 12px 14px; border: 1px solid #d5e5da; border-radius: 6px; background: #f2f8f3; }
+    footer { margin-top: 22px; padding-top: 8px; border-top: 1px solid #dce6df; text-align: center; color: #91a097; font-size: 8pt; break-inside: avoid; page-break-inside: avoid; }
+    </style></head><body><div class='cover-note'><strong>校园事务智能办事助手（福晓通）</strong><br>奶娃工程 · 概要设计材料 · V1.0 · 2026-11-06<br>正式墨刀链接与成员具体分工仍待团队确认。</div><h1>《奶娃工程_数据库设计说明书》</h1>
+<blockquote>
+<p><strong>项目名称：</strong> 校园事务智能办事助手<br>
+<strong>文档版本：</strong> v1.0（概要设计阶段）<br>
+<strong>本稿整理人：</strong> 待团队确认<br>
+<strong>编制日期：</strong> 2026-11-06<br>
+<strong>团队名称：</strong> 奶娃工程<br>
+<strong>数据库基线：</strong> PostgreSQL 15+ 或 MySQL 8.0（二选一，本文优先采用标准 SQL 表达）</p>
+</blockquote>
+<h2>0 术语与设计约定</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ER 图</td>
+<td>Entity-Relationship Diagram，实体—联系图</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Object-Relational Mapping，对象关系映射</td>
+</tr>
+<tr>
+<td>PK</td>
+<td>Primary Key，主键</td>
+</tr>
+<tr>
+<td>FK</td>
+<td>Foreign Key，外键</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Retrieval-Augmented Generation，检索增强生成</td>
+</tr>
+<tr>
+<td>RBAC</td>
+<td>Role-Based Access Control，基于角色的访问控制</td>
+</tr>
+<tr>
+<td>UTC</td>
+<td>Coordinated Universal Time，协调世界时；数据库时间统一存储 UTC，前端按东八区显示</td>
+</tr>
+<tr>
+<td>软删除</td>
+<td>使用 <code>deleted_at</code> 标记删除，不立即物理删除，便于审计和恢复</td>
+</tr>
+<tr>
+<td>政策证据</td>
+<td>政策版本、原文片段、来源链接和核验状态的组合</td>
+</tr>
+</tbody>
+</table>
+<p>字段命名采用小写下划线；所有业务表含 <code>created_at</code>、<code>updated_at</code>，需要用户删除的数据按策略保留 <code>deleted_at</code>。枚举可使用数据库枚举或受控字符串，应用层和数据库层必须保持同一字典。</p>
+<h2>1 数据库设计目标与范围</h2>
+<p>数据库负责保存：</p>
+<ol>
+<li>用户、角色和最小用户画像；</li>
+<li>政策、政策版本、适用对象、部门、来源文件和核验记录；</li>
+<li>会话、消息、结构化回答、政策引用和工具调用审计；</li>
+<li>材料清单、清单项目、提醒、收藏和反馈；</li>
+<li>管理操作、模型调用和数据访问审计。</li>
+</ol>
+<p>数据库不保存模型密钥，不把未核验的外部网页直接当作政策答案，不把完整个人敏感信息写入普通日志。向量索引不是首期必选持久化数据；若后续启用，应与政策版本通过 <code>policy_version_id</code> 关联，而不是替代关系库中的事实字段。</p>
+<h2>2 数据分层与生命周期</h2>
+<figure class="design-diagram design-diagram-lifecycle"><img src="diagrams/lifecycle.svg" alt="设计图 1" /></figure>
+<p>生命周期规则：政策先进入草稿，再经过来源可访问、关键条件可定位、适用对象明确、发布日期与核验时间完整等检查；只有 <code>policy.status = PUBLISHED</code> 且 <code>policy_version.expiry_status &lt;&gt; EXPIRED</code> 的版本可被 <code>PolicySearchTool</code> 返回为确定性证据。发布新版本不覆盖旧版本，旧版本保留以支持回答追溯。</p>
+<h2>3 概念结构设计（ER 图）</h2>
+<p>下图用于查看实体间的整体连接。打印时请结合 3.2—3.4 的局部 ER 图阅读关系名称和基数；局部图重复出现的实体表示同一张表，不增加新的实体或关系。</p>
+<figure class="design-diagram design-diagram-er-model"><img src="diagrams/er-model.svg" alt="设计图 2" /></figure>
+<h3>3.1 实体说明</h3>
+<table>
+<thead>
+<tr>
+<th>实体</th>
+<th>说明</th>
+<th>关键约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td>平台用户最小身份</td>
+<td><code>account</code> 唯一；不存明文密码</td>
+</tr>
+<tr>
+<td><code>user_profile</code></td>
+<td>个性化筛选画像</td>
+<td>与用户一对一；字段可为空</td>
+</tr>
+<tr>
+<td><code>role/user_role</code></td>
+<td>RBAC 角色</td>
+<td>普通学生、录入员、核验人、管理员</td>
+</tr>
+<tr>
+<td><code>policy</code></td>
+<td>稳定的政策业务对象</td>
+<td>标题/事项/发布部门；不随版本覆盖</td>
+</tr>
+<tr>
+<td><code>policy_version</code></td>
+<td>某次发布的具体内容</td>
+<td>版本号唯一；保存结构化字段和状态</td>
+</tr>
+<tr>
+<td><code>policy_audience</code></td>
+<td>政策适用对象</td>
+<td>支持学历、年级、专业、校区等维度</td>
+</tr>
+<tr>
+<td><code>department</code></td>
+<td>负责部门和官方联系渠道</td>
+<td>联系方式必须核验</td>
+</tr>
+<tr>
+<td><code>source_document</code></td>
+<td>官方原文或附件元数据</td>
+<td>保存 URL、哈希、抓取时间，不默认保存全文</td>
+</tr>
+<tr>
+<td><code>policy_source</code></td>
+<td>政策版本与来源的多对多关系</td>
+<td>可定位条款/页码/片段</td>
+</tr>
+<tr>
+<td><code>conversation/message</code></td>
+<td>用户问答记录</td>
+<td>按用户隔离；支持删除</td>
+</tr>
+<tr>
+<td><code>answer/citation</code></td>
+<td>结构化回答及引用</td>
+<td>每个政策结论应有引用</td>
+</tr>
+<tr>
+<td><code>checklist/checklist_item</code></td>
+<td>材料清单及勾选项</td>
+<td>用户确认后创建</td>
+</tr>
+<tr>
+<td><code>reminder</code></td>
+<td>截止时间/事项提醒</td>
+<td>用户所有权、时间和渠道校验</td>
+</tr>
+<tr>
+<td><code>favorite</code></td>
+<td>政策或流程收藏</td>
+<td>用户+目标唯一</td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td>错误/未解决反馈</td>
+<td>关联消息和处理状态</td>
+</tr>
+<tr>
+<td><code>tool_call_log/audit_log</code></td>
+<td>Agent工具调用与管理审计</td>
+<td>脱敏、可追溯、不可篡改策略</td>
+</tr>
+</tbody>
+</table>
+<h3>3.2 用户、角色与审计</h3>
+<figure class="design-diagram design-diagram-er-identity"><img src="diagrams/er-identity.svg" alt="设计图 3" /></figure>
+<h3>3.3 政策版本、来源与引用</h3>
+<figure class="design-diagram design-diagram-er-evidence"><img src="diagrams/er-evidence.svg" alt="设计图 4" /></figure>
+<h3>3.4 会话、回答与办事数据</h3>
+<figure class="design-diagram design-diagram-er-workflow"><img src="diagrams/er-workflow.svg" alt="设计图 5" /></figure>
+<h2>4 关系数据模型</h2>
+<h3>4.1 关系模式总览</h3>
+<pre><code class="language-text">USER(user_id PK, account UK, display_name, status, created_at, updated_at, deleted_at)
+USER_PROFILE(user_id PK/FK, education_level, grade, major, campus, consent_version, created_at, updated_at)
+ROLE(role_id PK, role_code UK, role_name)
+USER_ROLE(user_id PK/FK, role_id PK/FK, granted_by, granted_at)
+DEPARTMENT(department_id PK, name, phone, office_location, official_url, verified_at, status)
+POLICY(policy_id PK, matter_code, title, publisher_department_id FK, status, created_at, updated_at, deleted_at)
+POLICY_VERSION(policy_version_id PK, policy_id FK, version_no, publish_date, expiry_status, last_verified_at, conditions_text, process_text, materials_text, location_text, deadline_text, official_url, source_excerpt, status, verified_by FK, verified_at, created_at)
+POLICY_AUDIENCE(policy_audience_id PK, policy_id FK, audience_type, audience_value, match_operator)
+SOURCE_DOCUMENT(source_document_id PK, title, source_url UK, publisher, published_at, content_hash, storage_uri, fetched_at, status)
+POLICY_SOURCE(policy_version_id PK/FK, source_document_id PK/FK, locator, excerpt, relation_type)
+CONVERSATION(conversation_id PK, user_id FK, title, status, created_at, updated_at, deleted_at)
+MESSAGE(message_id PK, conversation_id FK, user_id FK, role, content, intent_code, risk_level, model_provider, model_name, latency_ms, created_at, deleted_at)
+ANSWER(answer_id PK, message_id UK/FK, answer_text, steps_json, materials_json, suggested_actions_json, gate_result, created_at)
+CITATION(citation_id PK, message_id FK, policy_version_id FK, field_name, excerpt, citation_order)
+CHECKLIST(checklist_id PK, user_id FK, policy_id FK, title, status, created_at, updated_at, deleted_at)
+CHECKLIST_ITEM(item_id PK, checklist_id FK, item_order, content, required_flag, completed, note, updated_at)
+REMINDER(reminder_id PK, user_id FK, policy_id FK NULL, title, remind_at, channel, status, idempotency_key UK, created_at, updated_at)
+FAVORITE(favorite_id PK, user_id FK, target_type, target_id, created_at, UNIQUE(user_id,target_type,target_id))
+FEEDBACK(feedback_id PK, user_id FK, message_id FK NULL, reason_code, description, status, handler_id FK NULL, handled_note, created_at, updated_at)
+TOOL_CALL_LOG(tool_call_id PK, user_id FK NULL, conversation_id FK NULL, message_id FK NULL, tool_name, request_json, result_code, policy_version_id FK NULL, latency_ms, created_at)
+AUDIT_LOG(audit_id PK, actor_user_id FK NULL, action, object_type, object_id, before_hash, after_hash, request_id, created_at)
+</code></pre>
+<h3>4.2 范式与反范式说明</h3>
+<ul>
+<li><code>policy</code> 与 <code>policy_version</code> 分离，避免政策更新造成历史引用失效；</li>
+<li><code>policy_audience</code> 用行表示多种适用条件，避免在政策表中增加大量重复列；</li>
+<li><code>policy_source</code> 和 <code>citation</code> 分别表示“版本的来源”和“某次回答引用了什么”，支持可追溯性；</li>
+<li><code>steps_json</code>、<code>materials_json</code>、<code>suggested_actions_json</code> 是回答展示快照，事实仍以政策版本结构化字段为准；</li>
+<li>消息正文和回答快照允许独立删除/脱敏，不影响政策知识库；</li>
+<li>首期不存向量值；后续向量索引表只保存外部索引 ID、模型版本和 <code>policy_version_id</code>。</li>
+</ul>
+<h2>5 主要数据表设计与数据字典</h2>
+<h3>5.1 <code>user</code> 用户表</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th style="text-align:right">空</th>
+<th>键/默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>PK</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td>VARCHAR(128)</td>
+<td style="text-align:right">否</td>
+<td>UK</td>
+<td>登录账号或统一认证标识</td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>VARCHAR(80)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>展示名，非政策证据</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td style="text-align:right">否</td>
+<td><code>ACTIVE</code></td>
+<td><code>ACTIVE/LOCKED/DELETED</code></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>修改时间</td>
+</tr>
+<tr>
+<td><code>deleted_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>软删除时间</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 <code>user_profile</code> 用户画像表</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th style="text-align:right">空</th>
+<th>键/默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>PK/FK</td>
+<td>对应用户</td>
+</tr>
+<tr>
+<td><code>education_level</code></td>
+<td>VARCHAR(20)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>专科/本科/硕士/博士</td>
+</tr>
+<tr>
+<td><code>grade</code></td>
+<td>VARCHAR(20)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>年级或入学年份</td>
+</tr>
+<tr>
+<td><code>major</code></td>
+<td>VARCHAR(120)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>专业</td>
+</tr>
+<tr>
+<td><code>campus</code></td>
+<td>VARCHAR(80)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>校区</td>
+</tr>
+<tr>
+<td><code>consent_version</code></td>
+<td>VARCHAR(30)</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>画像使用说明版本</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>最近修改</td>
+</tr>
+</tbody>
+</table>
+<h3>5.3 <code>policy</code> 政策主表</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th style="text-align:right">空</th>
+<th>键/默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>policy_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>PK</td>
+<td>稳定业务 ID</td>
+</tr>
+<tr>
+<td><code>matter_code</code></td>
+<td>VARCHAR(40)</td>
+<td style="text-align:right">否</td>
+<td>IDX</td>
+<td><code>LEAVE/SCHOLARSHIP/...</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(240)</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>政策名称</td>
+</tr>
+<tr>
+<td><code>publisher_department_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>FK</td>
+<td>发布部门</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(24)</td>
+<td style="text-align:right">否</td>
+<td><code>DRAFT</code></td>
+<td>政策主状态</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>修改时间</td>
+</tr>
+<tr>
+<td><code>deleted_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>软删除</td>
+</tr>
+</tbody>
+</table>
+<h3>5.4 <code>policy_version</code> 政策版本表</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th style="text-align:right">空</th>
+<th>键/默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>policy_version_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>PK</td>
+<td>版本标识</td>
+</tr>
+<tr>
+<td><code>policy_id</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">否</td>
+<td>FK/IDX</td>
+<td>政策主对象</td>
+</tr>
+<tr>
+<td><code>version_no</code></td>
+<td>VARCHAR(40)</td>
+<td style="text-align:right">否</td>
+<td>UK(policy_id,version_no)</td>
+<td>版本号</td>
+</tr>
+<tr>
+<td><code>publish_date</code></td>
+<td>DATE</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>发布日期</td>
+</tr>
+<tr>
+<td><code>expiry_status</code></td>
+<td>VARCHAR(20)</td>
+<td style="text-align:right">否</td>
+<td><code>MAY_EXPIRE</code></td>
+<td>有效性</td>
+</tr>
+<tr>
+<td><code>last_verified_at</code></td>
+<td>DATE</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>最后核验日期</td>
+</tr>
+<tr>
+<td><code>conditions_text</code></td>
+<td>TEXT</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>办理条件</td>
+</tr>
+<tr>
+<td><code>process_text</code></td>
+<td>TEXT</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>办理流程</td>
+</tr>
+<tr>
+<td><code>materials_text</code></td>
+<td>TEXT</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>材料清单原文/结构化文本</td>
+</tr>
+<tr>
+<td><code>location_text</code></td>
+<td>VARCHAR(500)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>地点</td>
+</tr>
+<tr>
+<td><code>deadline_text</code></td>
+<td>VARCHAR(500)</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>原样保留动态日期描述</td>
+</tr>
+<tr>
+<td><code>official_url</code></td>
+<td>VARCHAR(1000)</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>官方入口</td>
+</tr>
+<tr>
+<td><code>source_excerpt</code></td>
+<td>TEXT</td>
+<td style="text-align:right">否</td>
+<td></td>
+<td>可定位证据片段</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(24)</td>
+<td style="text-align:right">否</td>
+<td><code>DRAFT</code></td>
+<td>版本状态</td>
+</tr>
+<tr>
+<td><code>verified_by</code></td>
+<td>BIGINT</td>
+<td style="text-align:right">是</td>
+<td>FK</td>
+<td>核验人</td>
+</tr>
+<tr>
+<td><code>verified_at</code></td>
+<td>TIMESTAMP</td>
+<td style="text-align:right">是</td>
+<td></td>
+<td>核验时间</td>
+</tr>
+</tbody>
+</table>
+<h3>5.5 <code>conversation/message/answer/citation</code> 会话与证据</h3>
+<p><code>message.role</code> 取 <code>USER/ASSISTANT/SYSTEM</code>；<code>message.intent_code</code> 取 <code>ELIGIBILITY/PROCESS/MATERIAL/DEADLINE/CONTACT/EXPLANATION/OUT_OF_SCOPE</code>；<code>risk_level</code> 取 <code>LOW/MEDIUM/HIGH/UNKNOWN</code>。<code>citation</code> 必须关联政策版本，保存引用字段、片段和顺序。回答文本可以被用户删除，但引用审计是否保留由团队隐私策略决定。</p>
+<h3>5.6 <code>checklist/reminder/feedback</code> 任务辅助数据</h3>
+<ul>
+<li>清单项目使用 <code>item_order</code> 保证展示顺序；<code>required_flag</code> 表示政策要求，不由模型自由决定。</li>
+<li>提醒使用 <code>idempotency_key</code> 防止重复创建；<code>remind_at</code> 必须晚于当前时间，渠道首期为 <code>IN_APP</code>。</li>
+<li>反馈原因取 <code>WRONG/OUTDATED/MISSING_SOURCE/NOT_SOLVED/OTHER</code>，处理结论必须关联核验版本或部门渠道。</li>
+</ul>
+<h3>5.7 审计与工具调用</h3>
+<p><code>tool_call_log</code> 记录工具名、脱敏后的输入摘要、返回码、命中的政策版本、耗时和请求关联 ID；不保存完整密钥、完整个人身份信息或未脱敏模型上下文。<code>audit_log</code> 记录管理端发布、下线、核验和权限变更，可采用追加写入和定期归档策略。</p>
+<h2>6 索引、约束与查询设计</h2>
+<h3>6.1 关键索引</h3>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>索引</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>policy</code></td>
+<td><code>(matter_code,status)</code></td>
+<td>事项分类与发布状态过滤</td>
+</tr>
+<tr>
+<td><code>policy_version</code></td>
+<td><code>(policy_id,status,expiry_status)</code></td>
+<td>取当前有效版本</td>
+</tr>
+<tr>
+<td><code>policy_version</code></td>
+<td><code>(last_verified_at,expiry_status)</code></td>
+<td>过期复核任务</td>
+</tr>
+<tr>
+<td><code>policy_audience</code></td>
+<td><code>(audience_type,audience_value,policy_id)</code></td>
+<td>用户画像匹配</td>
+</tr>
+<tr>
+<td><code>conversation</code></td>
+<td><code>(user_id,updated_at desc)</code></td>
+<td>历史会话分页</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>(conversation_id,created_at)</code></td>
+<td>会话消息排序</td>
+</tr>
+<tr>
+<td><code>citation</code></td>
+<td><code>(message_id,citation_order)</code></td>
+<td>回答来源展示</td>
+</tr>
+<tr>
+<td><code>reminder</code></td>
+<td><code>(user_id,status,remind_at)</code></td>
+<td>提醒调度</td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td><code>(status,created_at)</code></td>
+<td>管理端处理队列</td>
+</tr>
+<tr>
+<td><code>tool_call_log</code></td>
+<td><code>(conversation_id,created_at)</code></td>
+<td>追溯 Agent 调用链</td>
+</tr>
+</tbody>
+</table>
+<h3>6.2 全文检索策略</h3>
+<p>首期可用 <code>title、matter_code、conditions_text、process_text、materials_text、source_excerpt</code> 的全文/关键词索引。检索结果必须二次过滤：<code>policy.status = PUBLISHED</code>、<code>policy_version.status = PUBLISHED</code>、时效不是 <code>EXPIRED</code>，并按适用对象和官方来源层级排序。后续引入向量检索时，保留关键词检索作为可解释兜底。</p>
+<h3>6.3 典型查询逻辑</h3>
+<pre><code class="language-sql">SELECT p.policy_id, p.title, pv.policy_version_id, pv.conditions_text,
+       pv.process_text, pv.materials_text, pv.official_url,
+       pv.last_verified_at, pv.expiry_status
+FROM policy p
+JOIN policy_version pv ON pv.policy_id = p.policy_id
+LEFT JOIN policy_audience pa ON pa.policy_id = p.policy_id
+WHERE p.status = 'PUBLISHED'
+  AND pv.status = 'PUBLISHED'
+  AND pv.expiry_status &lt;&gt; 'EXPIRED'
+  AND p.matter_code = :matter
+  AND (pa.audience_type = :audience_type OR pa.audience_type IS NULL)
+ORDER BY
+  CASE WHEN pa.audience_value = :audience_value THEN 0 ELSE 1 END,
+  CASE WHEN pv.expiry_status = 'VALID' THEN 0 ELSE 1 END,
+  pv.last_verified_at DESC;
+</code></pre>
+<p>应用层仍需检查多个版本是否存在冲突；数据库排序不能替代人工核验和证据门禁。</p>
+<h2>7 ORM 映射设计</h2>
+<h3>7.1 实体—表映射</h3>
+<table>
+<thead>
+<tr>
+<th>领域实体</th>
+<th>数据表</th>
+<th>映射关系</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>User</code></td>
+<td><code>user</code></td>
+<td>1:1 <code>UserProfile</code>，1:N <code>Conversation</code></td>
+<td>用户聚合根</td>
+</tr>
+<tr>
+<td><code>UserProfile</code></td>
+<td><code>user_profile</code></td>
+<td>1:1</td>
+<td>可选画像</td>
+</tr>
+<tr>
+<td><code>Policy</code></td>
+<td><code>policy</code></td>
+<td>1:N <code>PolicyVersion</code>、1:N <code>PolicyAudience</code></td>
+<td>政策聚合根</td>
+</tr>
+<tr>
+<td><code>PolicyVersion</code></td>
+<td><code>policy_version</code></td>
+<td>N:1 <code>Policy</code>，N:M <code>SourceDocument</code></td>
+<td>可被引用的事实版本</td>
+</tr>
+<tr>
+<td><code>Department</code></td>
+<td><code>department</code></td>
+<td>1:N <code>Policy</code></td>
+<td>联系方式来源</td>
+</tr>
+<tr>
+<td><code>Conversation</code></td>
+<td><code>conversation</code></td>
+<td>1:N <code>Message</code></td>
+<td>会话聚合</td>
+</tr>
+<tr>
+<td><code>Message</code></td>
+<td><code>message</code></td>
+<td>1:0..1 <code>Answer</code>，1:N <code>Citation</code></td>
+<td>用户/助手消息</td>
+</tr>
+<tr>
+<td><code>Answer</code></td>
+<td><code>answer</code></td>
+<td>1:1 <code>Message</code></td>
+<td>回答展示快照</td>
+</tr>
+<tr>
+<td><code>Citation</code></td>
+<td><code>citation</code></td>
+<td>N:1 <code>PolicyVersion</code></td>
+<td>引用关系</td>
+</tr>
+<tr>
+<td><code>Checklist</code></td>
+<td><code>checklist</code></td>
+<td>1:N <code>ChecklistItem</code></td>
+<td>用户副作用数据</td>
+</tr>
+<tr>
+<td><code>Reminder</code></td>
+<td><code>reminder</code></td>
+<td>N:1 <code>User</code>，N:1 <code>Policy</code>（可空）</td>
+<td>提醒</td>
+</tr>
+<tr>
+<td><code>Feedback</code></td>
+<td><code>feedback</code></td>
+<td>N:1 <code>User</code>，N:1 <code>Message</code>（可空）</td>
+<td>反馈</td>
+</tr>
+</tbody>
+</table>
+<h3>7.2 ORM 约束</h3>
+<ul>
+<li>外键删除默认限制；用户删除使用软删除或匿名化任务，不级联删除政策证据。</li>
+<li>领域枚举与数据库字典统一；非法状态转换在领域服务中拒绝。</li>
+<li><code>Policy</code> 聚合内部版本发布采用事务：写入版本、更新主状态、写入审计、刷新索引要么全部成功，要么回滚。</li>
+<li><code>Checklist</code>、<code>Reminder</code> 和 <code>Favorite</code> 的所有权通过当前认证用户推导，禁止使用客户端传来的用户 ID 作为授权依据。</li>
+</ul>
+<h2>8 数据完整性与事务</h2>
+<h3>8.1 事务边界</h3>
+<table>
+<thead>
+<tr>
+<th>事务</th>
+<th>包含操作</th>
+<th>一致性要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>发布政策</td>
+<td>写版本、核验记录、更新状态、审计</td>
+<td>全部成功才可被检索</td>
+</tr>
+<tr>
+<td>保存回答</td>
+<td>写助手消息、回答快照、引用、工具日志</td>
+<td>回答无引用则不得标记确定性</td>
+</tr>
+<tr>
+<td>创建清单</td>
+<td>读取政策材料、写清单和项目</td>
+<td>用户确认后一次提交</td>
+</tr>
+<tr>
+<td>创建提醒</td>
+<td>校验政策/时间/所有权、写提醒、审计</td>
+<td>幂等；重复请求不重复创建</td>
+</tr>
+<tr>
+<td>处理反馈</td>
+<td>更新状态、处理说明、关联核验版本</td>
+<td>可追溯处理依据</td>
+</tr>
+</tbody>
+</table>
+<h3>8.2 约束规则</h3>
+<ol>
+<li>同一政策的版本号唯一；已发布版本不能直接修改关键事实字段。</li>
+<li><code>official_url</code> 必须是 HTTPS 或经过白名单批准的官方域名。</li>
+<li><code>last_verified_at</code> 不能为空；动态截止日期存原文，不强制转换为具体日期。</li>
+<li>引用只能指向已发布或历史可追溯的政策版本；新回答不能引用已过期版本作为确定性结论。</li>
+<li>用户只能更新自己的清单项目、提醒、收藏和反馈；管理端读写按照角色授权。</li>
+</ol>
+<h2>9 安全、隐私与数据治理</h2>
+<ul>
+<li>数据库账号按应用读写、迁移、只读报表分离；生产环境禁用共享管理员账号。</li>
+<li>连接使用 TLS；备份文件加密，密钥不与备份放在同一位置。</li>
+<li>账号、学号、手机号等标识按最小化原则存储；不需要的字段不采集。</li>
+<li>会话删除提供软删除后定期物理清理；用户导出/删除请求必须写审计。</li>
+<li>日志字段脱敏，模型上下文不直接落普通日志；调试环境使用合成账号。</li>
+<li>管理端发布和权限变更采用 RBAC + 二次确认；高风险操作记录 request ID。</li>
+<li>政策原文存储采用内容哈希，定期检查远端来源是否变化，变化后进入待核验而非静默替换。</li>
+</ul>
+<h2>10 备份、恢复与运维</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>设计</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全量备份</td>
+<td>每日一次，保留至少 7 个恢复点</td>
+</tr>
+<tr>
+<td>增量/日志</td>
+<td>课程项目可按小时导出关键变更；生产按数据库能力配置</td>
+</tr>
+<tr>
+<td>原文附件</td>
+<td>对象存储版本化，记录 SHA-256 内容哈希</td>
+</tr>
+<tr>
+<td>恢复演练</td>
+<td>发布前在独立环境恢复一次，核对政策版本、引用和审计</td>
+</tr>
+<tr>
+<td>索引重建</td>
+<td>从 <code>policy_version</code> 重建，不把索引当唯一事实源</td>
+</tr>
+<tr>
+<td>删除请求</td>
+<td>先软删除并阻断查询，再按保留期限物理清理</td>
+</tr>
+<tr>
+<td>监控</td>
+<td>连接池、慢查询、备份结果、检索命中率、引用缺失率</td>
+</tr>
+</tbody>
+</table>
+<h2>11 与 Agent 的数据交互边界</h2>
+<figure class="design-diagram design-diagram-agent-boundary"><img src="diagrams/agent-boundary.svg" alt="设计图 6" /></figure>
+<p>Agent 不能直接使用数据库连接；工具层负责 SQL/ORM、权限、字段投影、脱敏和审计。模型看到的是证据包，不是数据库表结构和其他用户数据。</p>
+<h2>12 验收清单</h2>
+<ul>
+<li>[x] ER 图、关系数据模型和实体—表 ORM 映射；</li>
+<li>[x] 政策版本、原文来源、引用关系和核验状态；</li>
+<li>[x] 用户画像、会话、任务结果、清单、提醒和反馈存储；</li>
+<li>[x] 主键、外键、唯一约束、索引、事务和状态规则；</li>
+<li>[x] Agent 只读证据边界、审计和隐私设计；</li>
+<li>[x] 团队名称：奶娃工程；</li>
+<li>[x] 全体成员名单已登记；</li>
+<li>[ ] 最终数据库产品仍待开发阶段确认。</li>
+</ul>
+<footer>数据库设计说明书 · 奶娃工程 · 2026-11-06</footer></body></html>

@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-11-03T11:32:40.814Z",
+  "widths": [
+    320,
+    390,
+    760,
+    768,
+    1024,
+    1440
+  ],
+  "results": [
+    {
+      "width": 320,
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305,
+      "navWidth": 305,
+      "contextRailDisplay": "none",
+      "assistantLayoutDisplay": "block",
+      "heading": {
+        "x": 15,
+        "y": 76,
+        "width": 275,
+        "height": 100.171875,
+        "top": 76,
+        "right": 290,
+        "bottom": 176.171875,
+        "left": 15
+      },
+      "composer": {
+        "x": 15,
+        "y": 661,
+        "width": 275,
+        "height": 95,
+        "top": 661,
+        "right": 290,
+        "bottom": 756,
+        "left": 15
+      },
+      "overflow": []
+    },
+    {
+      "width": 390,
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375,
+      "navWidth": 375,
+      "contextRailDisplay": "none",
+      "assistantLayoutDisplay": "block",
+      "heading": {
+        "x": 15,
+        "y": 76,
+        "width": 345,
+        "height": 100.171875,
+        "top": 76,
+        "right": 360,
+        "bottom": 176.171875,
+        "left": 15
+      },
+      "composer": {
+        "x": 15,
+        "y": 674.5,
+        "width": 345,
+        "height": 95,
+        "top": 674.5,
+        "right": 360,
+        "bottom": 769.5,
+        "left": 15
+      },
+      "overflow": []
+    },
+    {
+      "width": 760,
+      "innerWidth": 760,
+      "clientWidth": 745,
+      "scrollWidth": 745,
+      "navWidth": 745,
+      "contextRailDisplay": "none",
+      "assistantLayoutDisplay": "block",
+      "heading": {
+        "x": 15,
+        "y": 76,
+        "width": 715,
+        "height": 81.484375,
+        "top": 76,
+        "right": 730,
+        "bottom": 157.484375,
+        "left": 15
+      },
+      "composer": {
+        "x": 15,
+        "y": 674.5,
+        "width": 715,
+        "height": 95,
+        "top": 674.5,
+        "right": 730,
+        "bottom": 769.5,
+        "left": 15
+      },
+      "overflow": []
+    },
+    {
+      "width": 768,
+      "innerWidth": 768,
+      "clientWidth": 768,
+      "scrollWidth": 768,
+      "navWidth": 179,
+      "contextRailDisplay": "none",
+      "assistantLayoutDisplay": "block",
+      "heading": {
+        "x": 224,
+        "y": 90,
+        "width": 520,
+        "height": 90.890625,
+        "top": 90,
+        "right": 744,
+        "bottom": 180.890625,
+        "left": 224
+      },
+      "composer": {
+        "x": 224,
+        "y": 694.5,
+        "width": 520,
+        "height": 95,
+        "top": 694.5,
+        "right": 744,
+        "bottom": 789.5,
+        "left": 224
+      },
+      "overflow": []
+    },
+    {
+      "width": 1024,
+      "innerWidth": 1024,
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "navWidth": 207,
+      "contextRailDisplay": "block",
+      "assistantLayoutDisplay": "grid",
+      "heading": {
+        "x": 260,
+        "y": 90,
+        "width": 476,
+        "height": 112.984375,
+        "top": 90,
+        "right": 736,
+        "bottom": 202.984375,
+        "left": 260
+      },
+      "composer": {
+        "x": 260,
+        "y": 694.5,
+        "width": 476,
+        "height": 95,
+        "top": 694.5,
+        "right": 736,
+        "bottom": 789.5,
+        "left": 260
+      },
+      "overflow": []
+    },
+    {
+      "width": 1440,
+      "innerWidth": 1440,
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "navWidth": 207,
+      "contextRailDisplay": "block",
+      "assistantLayoutDisplay": "grid",
+      "heading": {
+        "x": 274,
+        "y": 96,
+        "width": 808,
+        "height": 90.890625,
+        "top": 96,
+        "right": 1082,
+        "bottom": 186.890625,
+        "left": 274
+      },
+      "composer": {
+        "x": 274,
+        "y": 856.5,
+        "width": 808,
+        "height": 95,
+        "top": 856.5,
+        "right": 1082,
+        "bottom": 951.5,
+        "left": 274
+      },
+      "overflow": []
+    }
+  ],
+  "checks": {
+    "noElementOverflow": true,
+    "noDocumentHorizontalScroll": true
+  }
+}

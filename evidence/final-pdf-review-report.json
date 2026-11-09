@@ -1,0 +1,31 @@
+{
+  "document_date": "2026-11-06",
+  "reviewed_at": "2026-11-09",
+  "team": "奶娃工程",
+  "results": [
+    {
+      "file": "奶娃工程_系统设计说明书.pdf",
+      "pages": 8,
+      "bytes": 38139,
+      "sha256": "c956d4d1f8b01bc497827ae7efc90f867f30aa875cf31fbd24e55a02ddabb067",
+      "team_occurrences": 9,
+      "placeholder_occurrences": 0
+    },
+    {
+      "file": "奶娃工程_数据库设计说明书.pdf",
+      "pages": 8,
+      "bytes": 36760,
+      "sha256": "e9b3ed070b7656c8b20d08f0298125dc6ac8706057629d438548731182d0994e",
+      "team_occurrences": 10,
+      "placeholder_occurrences": 0
+    }
+  ],
+  "visual_review": {
+    "result": "PASS",
+    "contact_sheets": [
+      "final-system-pdf-contact.png",
+      "final-database-pdf-contact.png"
+    ],
+    "notes": "8 页均可见；未见裁切、重叠或空白页。"
+  }
+}

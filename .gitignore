@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+node_modules/
+pdf/
+# Superseded 18/12-page PDF build evidence; final 8-page evidence uses the
+# final-* names and remains tracked.
+evidence/pdf-review-report.json
+evidence/system-pdf-contact.png
+evidence/database-pdf-contact.png
+system-design-preview.png
