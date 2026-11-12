@@ -51,6 +51,8 @@
 | [系统设计说明书](docs/奶娃工程_系统设计说明书.pdf) | 系统架构、Agent 流程、接口、部署、安全及 UML 设计 |
 | [数据库设计说明书](docs/奶娃工程_数据库设计说明书.pdf) | ER 模型、关系模型、ORM 映射、索引、权限及 Agent 数据边界 |
 | [团队博客稿](blog-post.md) | 项目原型设计与概要设计说明 |
+| [Alpha 冲刺材料](alpha-sprint/README.md) | 冲刺计划、14 天日志、测试计划、Vlog 脚本、答辩材料和提交门禁 |
+| [Alpha 答辩 PPT](docs/alpha-sprint-defense.pptx) | Alpha 冲刺答辩初稿；结项时替换实际进度、分工和 Vlog 链接 |
 | [`diagrams/`](diagrams/) | 用例图、活动图、类图、时序图、协作图及数据库图示 |
 
 ## 目录结构
@@ -61,6 +63,8 @@
 ├─ docs/                # 正式设计说明书 PDF
 ├─ diagrams/            # UML 与数据库图示
 ├─ evidence/            # 原型与文档验证记录
+├─ alpha-sprint/        # Alpha 冲刺计划、日志、测试与博客材料
+├─ .github/workflows/   # GitHub Actions 验证流程
 ├─ scripts/             # 图示和文档构建脚本
 ├─ system-design.md     # 系统设计源稿
 ├─ database-design.md   # 数据库设计源稿

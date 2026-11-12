@@ -1,0 +1,18 @@
+day,date,planned_remaining_hours,actual_remaining_hours,completed_hours,source,status
+1,2026-11-08,78,,,计划估算,planned-only
+2,2026-11-09,72,,,计划估算,planned-only
+3,2026-11-10,66,,,计划估算,planned-only
+4,2026-11-11,60,,,计划估算,planned-only
+5,2026-11-12,54,,,计划估算,planned-only
+6,2026-11-13,48,,,计划估算,planned-only
+7,2026-11-14,42,,,计划估算,planned-only
+8,2026-11-15,36,,,计划估算,planned-only
+9,2026-11-16,30,,,计划估算,planned-only
+10,2026-11-17,24,,,计划估算,planned-only
+11,2026-11-18,18,,,计划估算,planned-only
+12,2026-11-19,12,,,计划估算,planned-only
+13,2026-11-20,6,,,计划估算,planned-only
+14,2026-11-21,0,,,计划估算,planned-only
+
+# 说明：actual_remaining_hours 和 completed_hours 必须由每日真实日志填写。
+# 计划曲线不是实际进度，不能在最终答辩中冒充实际燃尽图。

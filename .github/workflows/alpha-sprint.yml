@@ -1,0 +1,41 @@
+name: Alpha sprint package
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate sprint package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile validation scripts
+        run: python -m py_compile scripts/validate-alpha-sprint.py
+
+      - name: Validate tracked evidence and package structure
+        run: python scripts/validate-alpha-sprint.py
+
+      - name: Upload Alpha submission materials
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpha-sprint-materials
+          if-no-files-found: error
+          path: |
+            alpha-sprint/**
+            docs/alpha-sprint-defense.pptx
+            VERSION
+            CHANGELOG.md
